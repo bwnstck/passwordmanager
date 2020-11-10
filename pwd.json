@@ -1,16 +1,14 @@
 {
-  "wifi": {
-    "name": "Martin Router King",
-    "pwd": "wfjafj023-10-fjaf"
+  "Title": {
+    "name": "U2FsdGVkX1/gEp+RGAzu6iG2zHM8r/g+c04xpJuhQGA=",
+    "pwd": "U2FsdGVkX18PJgSTLe6WpRH6NiGaw4CIQj10znbkc5I="
   },
-
   "google": {
-    "name": "benny.weinstock@gmail.com",
-    "pwd": "adjf302-f2-0fj"
+    "name": "U2FsdGVkX1/N8ZrVlC8FFefubC8b2+RoHpM1Pqgqylhp4sjfnyeUkGjOEXq1FrUO",
+    "pwd": "U2FsdGVkX1+0BDFgIyMXHkUquFrUEjt2fkjV6lTlnhPc88LoFO57gWhetapvG7b+"
   },
-
   "github": {
-    "name": "login@flimmerkiste.xyz",
-    "pwd": "wfjafj023adffja-f0--adfa"
+    "name": "U2FsdGVkX1/c7W7aSn6Y8h+4o4od/nQTil7jojJ8aXKg1t7m2OmSzwHvBwZk0HKI",
+    "pwd": "U2FsdGVkX19d3PxHeXh8jc6ARthXDCl12hh+WPl0qjyez8ACoZ4fmBvu11utRGIn"
   }
 }
