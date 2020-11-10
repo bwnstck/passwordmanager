@@ -19,8 +19,8 @@ const masterPassword = [
 
 const getPwd = async () => {
   const data = await fs.readFile("./pwd.json", "utf8");
-  const pwd = await JSON.parse(data);
-  return pwd;
+  const pwdObj = await JSON.parse(data);
+  return pwdObj;
 };
 
 function start() {
@@ -35,24 +35,24 @@ function start() {
 }
 
 async function searchDB() {
-  //   console.log("blubb", await getPwd());
   const pwdObj = await getPwd();
 
-  inquirer
-    .prompt(questions)
-    .then((answers) => {
-      const searchQuery = answers["query"];
-      if (pwdObj[searchQuery]) {
-        console.log("🔒 ", pwdObj[searchQuery].name);
-        console.log("🔑 ", pwdObj[searchQuery].pwd);
-      } else {
-        console.log("No password safed... try again");
-        searchDB();
-      }
-    })
-    .catch((error) => {
-      console.log("error", error);
-    });
+  const answers = await inquirer.prompt(questions);
+
+  const searchQuery = answers["query"];
+  const pwd = pwdObj[searchQuery];
+  if (pwd) {
+    console.log("🔒 ", pwd.name);
+    console.log("🔑 ", pwd.pwd);
+  } else {
+    console.log("No password safed... try again");
+    searchDB();
+  }
+
+  // .catch((error) => {
+  //   console.log("error", error);
+  // });
+  console.log("wann werde ich aufgerufen???🐺");
 }
 
 module.exports = { start, searchDB };
