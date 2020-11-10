@@ -1,18 +1,15 @@
 const inquirer = require("inquirer");
-const fs = require(fs);
+const fs = require("fs").promises;
 
-fs.readFile("./pwds.json");
-
-const pwd = require("./pwds.json");
-
-var questions = [
+const questions = [
   {
     type: "input",
-    name: "pwd",
+    name: "query",
     message: "🔘 Show password for?",
   },
 ];
-var masterPassword = [
+
+const masterPassword = [
   {
     type: "password",
     name: "masterPwd",
@@ -20,24 +17,34 @@ var masterPassword = [
   },
 ];
 
+const getPwd = async () => {
+  const data = await fs.readFile("./pwd.json", "utf8");
+  const pwd = await JSON.parse(data);
+  return pwd;
+};
+
 function start() {
   inquirer.prompt(masterPassword).then((answer) => {
     if (answer["masterPwd"] === "admin") {
       searchDB();
     } else {
       console.log("so stupid... try again 🦹🏽‍♀ ️ ");
-      startPasswordManager();
+      start();
     }
   });
 }
 
-function searchDB() {
+async function searchDB() {
+  //   console.log("blubb", await getPwd());
+  const pwdObj = await getPwd();
+
   inquirer
     .prompt(questions)
     .then((answers) => {
-      if (answers["pwd"] === "wifi") {
-        console.log("🔒 ", pwd.name);
-        console.log("🔑 ", pwd.pwd);
+      const searchQuery = answers["query"];
+      if (pwdObj[searchQuery]) {
+        console.log("🔒 ", pwdObj[searchQuery].name);
+        console.log("🔑 ", pwdObj[searchQuery].pwd);
       } else {
         console.log("No password safed... try again");
         searchDB();
