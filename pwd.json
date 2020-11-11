@@ -1,14 +1,14 @@
 {
-  "Title": {
-    "name": "U2FsdGVkX1/gEp+RGAzu6iG2zHM8r/g+c04xpJuhQGA=",
-    "pwd": "U2FsdGVkX18PJgSTLe6WpRH6NiGaw4CIQj10znbkc5I="
-  },
   "google": {
-    "name": "U2FsdGVkX1/N8ZrVlC8FFefubC8b2+RoHpM1Pqgqylhp4sjfnyeUkGjOEXq1FrUO",
-    "pwd": "U2FsdGVkX1+0BDFgIyMXHkUquFrUEjt2fkjV6lTlnhPc88LoFO57gWhetapvG7b+"
+    "email": "U2FsdGVkX1+25nFTsw5RbC/wNf63osYwzb9KHYV+myCxBeCo8rPJtyWMUhC78VKI",
+    "pwd": "U2FsdGVkX1+F+65oD81ihNPkjdTKQWbQYlZEoClIGjo="
   },
   "github": {
-    "name": "U2FsdGVkX1/c7W7aSn6Y8h+4o4od/nQTil7jojJ8aXKg1t7m2OmSzwHvBwZk0HKI",
-    "pwd": "U2FsdGVkX19d3PxHeXh8jc6ARthXDCl12hh+WPl0qjyez8ACoZ4fmBvu11utRGIn"
+    "email": "U2FsdGVkX18lGFxXKXWneHUtHbHgpDm1qrWdIEv9cKXWOsCg3vzCeUP8/KiteRt0",
+    "pwd": "U2FsdGVkX1958lIESRoK5iLoUGcHDXb+d1dXanHunXMCZ52yPjD7yMAbjhGA96vx"
+  },
+  "BoojaBooja": {
+    "email": "U2FsdGVkX1+YZYx8QB0lnM7ZazerI1qwRiw1BbF8jnHbQcFI7qWso6PBB7JAbIrw",
+    "pwd": "U2FsdGVkX1+Kv1g57/kTaulk4oCo22XXsL97XEsf1SI="
   }
 }

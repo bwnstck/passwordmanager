@@ -1,6 +1,14 @@
 const inquirer = require("inquirer");
 const fs = require("fs").promises;
-const CryptoJS = require("crypto-js");
+const crypto = require("./utils/crypto");
+
+const masterPwd = "adminadmin";
+
+const getPwdObj = async () => {
+  const data = await fs.readFile("./pwd.json", "utf8");
+  const pwdObj = await JSON.parse(data);
+  return pwdObj;
+};
 
 const askForMasterPassword = [
   {
@@ -17,23 +25,6 @@ const askForPassword = [
   },
 ];
 
-const getPwdObj = async () => {
-  const data = await fs.readFile("./pwd.json", "utf8");
-  const pwdObj = await JSON.parse(data);
-  return pwdObj;
-};
-
-function start() {
-  inquirer.prompt(askForMasterPassword).then((answer) => {
-    if (answer["masterPwd"] === "adminadmin") {
-      makeChoice();
-    } else {
-      console.log("so stupid... try again 🦹🏽‍♀");
-      start();
-    }
-  });
-}
-
 const choices = [
   {
     type: "list",
@@ -42,6 +33,38 @@ const choices = [
     choices: ["Search", "Add"],
   },
 ];
+const askForTitel = [
+  {
+    type: "text",
+    name: "title",
+    message: "🥦 Title to save:",
+  },
+];
+const askForMail = [
+  {
+    type: "text",
+    name: "mail",
+    message: "📭 Email Adress to save:",
+  },
+];
+const askForNewPassword = [
+  {
+    type: "text",
+    name: "pwd",
+    message: "🔒 pwd to save:",
+  },
+];
+
+function start() {
+  inquirer.prompt(askForMasterPassword).then((answer) => {
+    if (answer["masterPwd"] === masterPwd) {
+      makeChoice();
+    } else {
+      console.log("so stupid... try again 🦹🏽‍♀");
+      start();
+    }
+  });
+}
 
 async function makeChoice() {
   const { choice } = await inquirer.prompt(choices);
@@ -61,9 +84,9 @@ async function searchDB() {
   const searchQuery = answers["query"];
   const entry = pwdObj[searchQuery];
   if (entry) {
-    const name = decryptData(entry.name, "adminadmin");
-    const pwd = decryptData(entry.pwd, "adminadmin");
-    console.log("🔒 ", name);
+    const pwd = crypto.decrypt(entry.pwd, masterPwd);
+    const email = crypto.decrypt(entry.email, masterPwd);
+    console.log("🔒 ", email);
     console.log("🔑 ", pwd);
   } else {
     console.log("No password safed... try again");
@@ -71,49 +94,19 @@ async function searchDB() {
   }
 }
 
-const askForTitel = [
-  {
-    type: "text",
-    name: "title",
-    message: "Title to save:",
-  },
-];
-const askForName = [
-  {
-    type: "text",
-    name: "name",
-    message: "Name to save:",
-  },
-];
-const askForNewPassword = [
-  {
-    type: "text",
-    name: "pwd",
-    message: "pwd to save:",
-  },
-];
-
 async function addEntryToDb() {
   const { title } = await inquirer.prompt(askForTitel);
-  const { name } = await inquirer.prompt(askForName);
-  const encryptedName = encryptData(name, "adminadmin");
+  const { mail } = await inquirer.prompt(askForMail);
+  const encryptedMail = crypto.encrypt(mail, masterPwd);
   const { pwd } = await inquirer.prompt(askForNewPassword);
-  const encryptedPw = encryptData(pwd, "adminadmin");
+  const encryptedPw = crypto.encrypt(pwd, masterPwd);
   //!Warum müssen gleiche prop/keys nur einmal genannt werden
-  const newEntryObj = { [title]: { name: encryptedName, pwd: encryptedPw } };
+  const newEntryObj = { [title]: { email: encryptedMail, pwd: encryptedPw } };
   const pwdObj = await getPwdObj();
 
-  const dataEntry = JSON.stringify(Object.assign(pwdObj, newEntryObj));
+  const dataEntry = JSON.stringify(Object.assign(pwdObj, newEntryObj), null, 2);
   await fs.writeFile("./pwd.json", dataEntry);
   console.log("Entry saved 🚀");
-}
-
-function encryptData(data, pwd) {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), pwd).toString();
-}
-function decryptData(data, pwd) {
-  const bytes = CryptoJS.AES.decrypt(data, pwd);
-  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }
 
 module.exports = { start };
