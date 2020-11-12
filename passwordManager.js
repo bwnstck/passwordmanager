@@ -1,5 +1,10 @@
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
+const {
+  encryptKey,
+  getPwdObj,
+  getNewEncryptedEntry,
+} = require("./utils/pwdHelpers");
 const fs = require("fs").promises;
 const masterPwd = "admin";
 
@@ -30,8 +35,10 @@ const choices = [
     choices: [SEARCH, "Add"],
   },
 ];
+
 start();
 function start() {
+  _;
   inquirer.prompt(askForMasterPassword).then((answer) => {
     if (answer["masterPwd"] === masterPwd) {
       return makeChoice();
@@ -53,15 +60,15 @@ async function makeChoice() {
 }
 
 async function searchDB() {
-  const pwdObj = await crypto.getPwdObj();
+  const pwdObj = await getPwdObj();
 
   const { query } = await inquirer.prompt(askForPassword);
 
   const entry = pwdObj[query];
 
   if (entry) {
-    const pwd = crypto.decrypt(entry.pwd, crypto.encryptKey);
-    const email = crypto.decrypt(entry.email, crypto.encryptKey);
+    const pwd = crypto.decrypt(entry.pwd, encryptKey);
+    const email = crypto.decrypt(entry.email, encryptKey);
     console.log("-----------------------------------");
     console.log("📧 Mail: ", bold(email));
     console.log("🔐 Pwd: ", bold().green(pwd));
@@ -73,8 +80,8 @@ async function searchDB() {
 }
 
 async function addEntryToDB() {
-  const newEntryObj = await crypto.getNewEncryptedEntry();
-  const pwdObj = await crypto.getPwdObj();
+  const newEntryObj = await getNewEncryptedEntry();
+  const pwdObj = await getPwdObj();
 
   const dataEntry = JSON.stringify(Object.assign(pwdObj, newEntryObj));
   await fs.writeFile("./pwd.json", dataEntry);
