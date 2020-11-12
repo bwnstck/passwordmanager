@@ -1,9 +1,30 @@
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
 const fs = require("fs").promises;
+const MongoClient = require("mongodb").MongoClient;
+const assert = require("assert");
 const masterPwd = "admin";
-
 const { bold, green, red, yellow, bgRed } = require("kleur");
+
+const url =
+  "mongodb+srv://benji:oaTFzcd3OwyV7kFI@cluster0.7pj4b.mongodb.net/pwmanager?retryWrites=true&w=majority";
+
+MongoClient.connect(url, function (err, client) {
+  const db = client.db();
+  assert.strictEqual(null, err);
+
+  db.collection("passwords")
+    .insertOne({
+      mongodbAtlas: {
+        email: "benji@blubb.de",
+        pwd: "adfa0df0a0faf",
+      },
+    })
+    .then(function (result) {
+      console.log("🚀 entry saved", result.ops);
+    });
+  // client.close();
+});
 
 const askForMasterPassword = [
   {
