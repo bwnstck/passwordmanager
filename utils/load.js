@@ -23,7 +23,7 @@ async function loadingAnimation() {
 
   await waitASecond();
   spinner.color = "magenta";
-  spinner.succeed("Guards defeatet... acces granted 🏆");
+  spinner.succeed("Guards defeated... acces granted 🏆");
   spinner.stop();
 }
 
