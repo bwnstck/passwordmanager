@@ -1,7 +1,8 @@
+require("dotenv").config();
+
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
 
-const masterPwd = "admin";
 const { bold, yellow, bgRed, red } = require("kleur");
 const {
   connect,
@@ -44,15 +45,12 @@ start();
 
 async function start() {
   console.log("Connecting to database...");
-  await connect(
-    "mongodb+srv://benji:oaTFzcd3OwyV7kFI@cluster0.7pj4b.mongodb.net/pwmanager?retryWrites=true&w=majority",
-    "pwmanager"
-  );
+  await connect(process.env.DB_URL, "pwmanager");
   console.log("Connected to database 🎉");
 
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
-  if (masterInput === masterPwd) {
+  if (masterInput === process.env.MASTER_PWD) {
     await makeChoice();
   } else {
     console.log(yellow().bgRed("...so stupid... try again 🦹"));

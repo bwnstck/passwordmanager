@@ -1,7 +1,6 @@
 const CryptoJS = require("crypto-js");
 const fs = require("fs").promises;
 const inquirer = require("inquirer");
-const encryptKey = "adminadmin";
 
 const askForTitel = [
   {
@@ -28,8 +27,8 @@ const askForNewPassword = [
 function encrypt(data, pwd) {
   return CryptoJS.AES.encrypt(JSON.stringify(data), pwd).toString();
 }
-function decrypt(data, pwd) {
-  const bytes = CryptoJS.AES.decrypt(data, pwd);
+function decrypt(data) {
+  const bytes = CryptoJS.AES.decrypt(data, process.env.CRYPTO_PWD);
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
@@ -42,9 +41,9 @@ const getPwdObj = async () => {
 async function getNewEncryptedEntry() {
   const { title } = await inquirer.prompt(askForTitel);
   const { mail } = await inquirer.prompt(askForMail);
-  const encryptedMail = encrypt(mail, encryptKey);
+  const encryptedMail = encrypt(mail, process.env.CRYPTO_PWD);
   const { pwd } = await inquirer.prompt(askForNewPassword);
-  const encryptedPw = encrypt(pwd, encryptKey);
+  const encryptedPw = encrypt(pwd, process.env.CRYPTO_PWD);
 
   return { title, email: encryptedMail, pwd: encryptedPw };
 }
@@ -54,5 +53,4 @@ module.exports = {
   decrypt,
   getPwdObj,
   getNewEncryptedEntry,
-  encryptKey,
 };
