@@ -46,7 +46,7 @@ async function getNewEncryptedEntry() {
   const { pwd } = await inquirer.prompt(askForNewPassword);
   const encryptedPw = encrypt(pwd, encryptKey);
 
-  return { [title]: { email: encryptedMail, pwd: encryptedPw } };
+  return { title, email: encryptedMail, pwd: encryptedPw };
 }
 
 module.exports = {
