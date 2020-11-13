@@ -36,7 +36,9 @@ const choices = [
     choices: [SEARCH, "Add"],
   },
 ];
+
 start();
+
 async function start() {
   console.log("Connecting to database...");
   await connect(
@@ -89,11 +91,7 @@ async function searchDB() {
 
 async function addEntryToDB() {
   const newEntryObj = await crypto.getNewEncryptedEntry();
-  // // const pwdObj = await crypto.getPwdObj();
   const collection = await setCollection("passwords");
-  // const dataEntry = JSON.stringify(Object.assign(pwdObj, newEntryObj));
-  // await fs.writeFile("./pwd.json", dataEntry);
-  // await setCollection("passwords").insertOne(newEntryObj);
   await replaceOne(collection, newEntryObj);
   console.log(newEntryObj.title, "Entry saved 🚀");
   await closeSession();
