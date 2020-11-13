@@ -1,4 +1,4 @@
-const masterPwd = "admin";
+require("dotenv").config();
 
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
@@ -50,7 +50,7 @@ async function start() {
   await loadingAnimation();
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
-  if (masterInput === masterPwd) {
+  if (masterInput === process.env.MASTER_PWD) {
     await makeChoice();
   } else {
     console.log(yellow().bgRed("...so stupid... try again 🦹"));

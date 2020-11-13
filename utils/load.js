@@ -14,10 +14,7 @@ async function loadingAnimation() {
 
   // actual DB-Connect
   await waitASecond();
-  connect(
-    "mongodb+srv://benji:oaTFzcd3OwyV7kFI@cluster0.7pj4b.mongodb.net/pwmanager?retryWrites=true&w=majority",
-    "pwmanager"
-  );
+  connect(process.env.DB_URL, "pwmanager");
   spinner.color = "magenta";
   spinner.text = "Fighting against the security guards 🥷🏻 💂‍♀️💂‍♀️";
 
