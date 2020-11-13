@@ -30,7 +30,7 @@ function encrypt(data, pwd) {
 }
 function decrypt(data, pwd) {
   const bytes = CryptoJS.AES.decrypt(data, pwd);
-  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  return bytes.toString(CryptoJS.enc.Utf8);
 }
 
 const getPwdObj = async () => {

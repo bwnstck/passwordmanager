@@ -9,12 +9,13 @@ const {
   setCollection,
   replaceOne,
   findInDataBase,
+  deleteOne,
 } = require("./utils/database");
 
 const askForMasterPassword = [
   {
     type: "password",
-    name: "masterPwd",
+    name: "masterInput",
     message: "🔒 Enter MasterPassword 🔒 ",
   },
 ];
@@ -22,18 +23,20 @@ const askForEntry = [
   {
     type: "input",
     name: "query",
-    message: "🔘 Show password for?",
+    message: "🔘 For which entry?",
   },
 ];
 
 const SEARCH = "Search your database";
+const DELETE = "Delete";
+const ADD = "Add";
 
 const choices = [
   {
     type: "list",
     name: "choice",
     message: "What you wanna do? 🍭",
-    choices: [SEARCH, "Add"],
+    choices: [SEARCH, ADD, DELETE],
   },
 ];
 
@@ -47,24 +50,33 @@ async function start() {
   );
   console.log("Connected to database 🎉");
 
-  inquirer.prompt(askForMasterPassword).then(async (answer) => {
-    if (answer["masterPwd"] === masterPwd) {
-      return await makeChoice();
-    } else {
-      console.log(yellow().bgRed("...so stupid... try again 🦹"));
-      return start();
-    }
-  });
+  const { masterInput } = await inquirer.prompt(askForMasterPassword);
+
+  if (masterInput === masterPwd) {
+    await makeChoice();
+  } else {
+    console.log(yellow().bgRed("...so stupid... try again 🦹"));
+    start();
+  }
 }
 
 async function makeChoice() {
   const { choice } = await inquirer.prompt(choices);
 
   if (choice === SEARCH) {
-    return searchDB();
-  } else if (choice === "Add") {
-    return await addEntryToDB();
+    searchDB();
+  } else if (choice === ADD) {
+    await addEntryToDB();
+  } else if (choice === DELETE) {
+    await deleteEntry();
   }
+}
+
+async function deleteEntry() {
+  const { query } = await inquirer.prompt(askForEntry);
+
+  await deleteOne(query);
+  await closeSession();
 }
 
 async function searchDB() {
