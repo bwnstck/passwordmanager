@@ -80,8 +80,6 @@ async function deleteEntry() {
 }
 
 async function searchDB() {
-  // const pwdObj = await crypto.getPwdObj();
-
   const { query } = await inquirer.prompt(askForEntry);
 
   const entry = await findInDataBase(query);
