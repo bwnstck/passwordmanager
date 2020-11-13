@@ -12,6 +12,7 @@ async function loadingAnimation() {
   spinner.color = "green";
   spinner.text = "running through the forest  🌳🦌🌳";
 
+  // actual DB-Connect
   await waitASecond();
   connect(
     "mongodb+srv://benji:oaTFzcd3OwyV7kFI@cluster0.7pj4b.mongodb.net/pwmanager?retryWrites=true&w=majority",

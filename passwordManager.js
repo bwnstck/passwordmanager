@@ -1,19 +1,17 @@
+const masterPwd = "admin";
+
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
-const Listr = require("listr");
-const { Observable } = require("rxjs");
 
-const masterPwd = "admin";
-const { bold, yellow, bgRed, red } = require("kleur");
+const { loadingAnimation } = require("./utils/load");
+const { bold, yellow, red, magenta, dim, white } = require("kleur");
 const {
-  connect,
   close,
   setCollection,
   replaceOne,
   findInDataBase,
   deleteOne,
 } = require("./utils/database");
-const { loadingAnimation } = require("./utils/load");
 
 const askForMasterPassword = [
   {
@@ -46,6 +44,9 @@ const choices = [
 start();
 
 async function start() {
+  console.log("-----------------------------------");
+  console.log(magenta().bold(`--== ${white("Database Attack 2000")} ==--`));
+  console.log("-----------------------------------");
   await loadingAnimation();
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
@@ -106,5 +107,5 @@ async function addEntryToDB() {
 
 async function closeSession() {
   await close();
-  console.log(bold("tschüssi!🥦"));
+  console.log(bold("🇵🇱 Do zobaczenia! 🥦"));
 }
