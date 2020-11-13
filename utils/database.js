@@ -8,6 +8,7 @@ async function connect(url, dbName) {
   client = await MongoClient.connect(url, { useUnifiedTopology: true });
   db = client.db(dbName);
   collection = db.collection("passwords");
+  return;
 }
 
 function close() {
