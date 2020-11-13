@@ -13,6 +13,7 @@ const {
   findInDataBase,
   deleteOne,
 } = require("./utils/database");
+const { loadingAnimation } = require("./utils/load");
 
 const askForMasterPassword = [
   {
@@ -45,53 +46,7 @@ const choices = [
 start();
 
 async function start() {
-  // console.log("Connecting to database...");
-
-  // console.log("Connected to database 🎉");
-
-  async function fourSecDbConnect() {
-    return;
-  }
-
-  const tasks = new Listr([
-    {
-      title: "Connecting to DB",
-      task: () => {
-        return new Observable((observer) => {
-          observer.next("searching for Mongo-DB 🍃");
-
-          setTimeout(() => {
-            observer.next("find your DB on the Map 🗺 ");
-          }, 2000);
-
-          setTimeout(() => {
-            observer.next("running through the forest  🌳🦌🌳");
-          }, 4000);
-          setTimeout(async () => {
-            await connect(
-              "mongodb+srv://benji:oaTFzcd3OwyV7kFI@cluster0.7pj4b.mongodb.net/pwmanager?retryWrites=true&w=majority",
-              "pwmanager"
-            );
-            observer.next("Fighting against the security guards 🥷🏻 💂‍♀️💂‍♀️");
-          }, 6000);
-          setTimeout(() => {
-            observer.complete("Guards defeatet... acces granted 🏆");
-          }, 8000);
-        });
-      },
-    },
-    // {
-    //   title: "Failure",
-    //   task: () => {
-    //     throw new Error("Bar");
-    //   },
-    // },
-  ]);
-
-  await tasks.run().catch((err) => {
-    // console.error(err);
-  });
-
+  await loadingAnimation();
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
   if (masterInput === masterPwd) {
