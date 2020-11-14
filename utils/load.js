@@ -13,10 +13,10 @@ async function loadingAnimation() {
   spinner.text = "running through the forest  🌳🦌🌳";
 
   // actual DB-Connect
-  await waitASecond();
-  connect(process.env.DB_URL, "pwmanager");
   spinner.color = "magenta";
-  spinner.text = "Fighting against the security guards 🥷🏻 💂‍♀️💂‍♀️";
+  spinner.text = "Fighting against the security guards 🥷 💂💂";
+  await waitASecond();
+  await connect(process.env.DB_URL, "pwmanager");
 
   await waitASecond();
   spinner.color = "magenta";
