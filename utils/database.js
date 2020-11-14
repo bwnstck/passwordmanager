@@ -1,3 +1,4 @@
+const { red, bold, green } = require("kleur");
 const { MongoClient } = require("mongodb");
 
 let client;
@@ -48,6 +49,26 @@ async function findInDataBase(query) {
     console.error(error);
   }
 }
+async function listDbEntries() {
+  try {
+    const cursor = await collection.find({});
+    let counter = 1;
+    function iterateFunc(entry) {
+      console.log(counter);
+      console.log("🎯", red().bold(entry.title));
+      console.log("-----------------------------------");
+      counter++;
+    }
+
+    function errorFunc(error) {
+      console.log(error);
+    }
+    await cursor.forEach(iterateFunc, errorFunc);
+    return;
+  } catch (error) {
+    console.error(error);
+  }
+}
 async function deleteOne(query) {
   try {
     await collection.deleteOne({ title: query });
@@ -62,4 +83,5 @@ exports.close = close;
 exports.setCollection = setCollection;
 exports.replaceOne = replaceOne;
 exports.findInDataBase = findInDataBase;
+exports.listDbEntries = listDbEntries;
 exports.deleteOne = deleteOne;

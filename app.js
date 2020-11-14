@@ -10,6 +10,7 @@ const {
   setCollection,
   replaceOne,
   findInDataBase,
+  listDbEntries,
   deleteOne,
 } = require("./utils/database");
 
@@ -28,7 +29,7 @@ const askForEntry = [
   },
 ];
 
-const SEARCH = "Search your database";
+const SEARCH = "Search in your database";
 const DELETE = "Delete";
 const ADD = "Add";
 const EXIT = "Exit";
@@ -42,6 +43,18 @@ const choices = [
   },
 ];
 
+const SEARCHONE = "Search one entry";
+const SEARCHALL = "Show all";
+
+const dbSearchChoices = [
+  {
+    type: "list",
+    name: "dbChoice",
+    message: "What you wanna do? 🍭",
+    choices: [SEARCHONE, SEARCHALL],
+  },
+];
+
 start();
 
 async function start() {
@@ -50,6 +63,7 @@ async function start() {
   console.log("-----------------------------------", "\n");
   await loadingAnimation();
   console.log("\n", "-----------------------------------", "\n");
+
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
   if (masterInput === process.env.MASTER_PWD) {
@@ -64,13 +78,21 @@ async function makeChoice() {
   const { choice } = await inquirer.prompt(choices);
 
   if (choice === SEARCH) {
-    searchDB();
+    const { dbChoice } = await inquirer.prompt(dbSearchChoices);
+    if (dbChoice === SEARCHONE) {
+      searchDB();
+    } else {
+      await listDbEntries();
+      await makeChoice();
+    }
   } else if (choice === ADD) {
     await addEntryToDB();
   } else if (choice === DELETE) {
     await deleteEntry();
   } else if (choice === EXIT) {
     await closeSession();
+  } else {
+    makeChoice();
   }
 }
 
