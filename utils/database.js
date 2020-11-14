@@ -5,10 +5,20 @@ let db;
 let collection;
 
 async function connect(url, dbName) {
-  client = await MongoClient.connect(url, { useUnifiedTopology: true });
+  try {
+    client = await MongoClient.connect(url, { useUnifiedTopology: true });
+  } catch (error) {
+    console.log(
+      "\n \n ----------------------------------- \n \n",
+      error,
+      "\n \n ----------------------------------- \n \n",
+      "⛔️ You've been defeated by the guards 🤺🤺🤺 ⛔️",
+      "\n \n"
+    );
+    process.exit(1);
+  }
   db = client.db(dbName);
   collection = db.collection("passwords");
-  return;
 }
 
 function close() {

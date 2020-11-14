@@ -1,5 +1,4 @@
 const CryptoJS = require("crypto-js");
-<<<<<<< HEAD
 const fs = require("fs").promises;
 const inquirer = require("inquirer");
 
@@ -24,8 +23,6 @@ const askForNewPassword = [
     message: "🔒 pwd to save:",
   },
 ];
-=======
->>>>>>> EncryptedMasterKey
 
 function encrypt(data, pwd) {
   return CryptoJS.AES.encrypt(JSON.stringify(data), pwd).toString();
@@ -35,7 +32,6 @@ function decrypt(data) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-<<<<<<< HEAD
 const getPwdObj = async () => {
   const data = await fs.readFile("./pwd.json", "utf8");
   const pwdObj = await JSON.parse(data);
@@ -57,9 +53,4 @@ module.exports = {
   decrypt,
   getPwdObj,
   getNewEncryptedEntry,
-=======
-module.exports = {
-  encrypt,
-  decrypt,
->>>>>>> EncryptedMasterKey
 };
