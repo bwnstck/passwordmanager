@@ -36,4 +36,16 @@ where
 
 - run `node app.js` in the project-root in your favourite Terminal
 
-![pwSafe Intro](./assets/passwordSafe2000.gif)
+### Demo
+
+::: Login :::
+![pwSafe Login](./assets/pwSafe-login.gif)
+
+::: Add :::
+![pwSafe Add](./assets/pwSafe-add.gif)
+
+::: Search :::
+![pwSafe Search](./assets/pwSafe-search.gif)
+
+::: Delete :::
+![pwSafe Delete](./assets/pwSafe-delete.gif)
