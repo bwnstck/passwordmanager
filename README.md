@@ -38,14 +38,18 @@ where
 
 ### Demo
 
-::: Login :::
+#### ::: Login :::
+
 ![pwSafe Login](./assets/pwSafe-login.gif)
 
-::: Add :::
+#### ::: Add :::
+
 ![pwSafe Add](./assets/pwSafe-add.gif)
 
-::: Search :::
+#### ::: Search :::
+
 ![pwSafe Search](./assets/pwSafe-search.gif)
 
-::: Delete :::
+#### ::: Delete :::
+
 ![pwSafe Delete](./assets/pwSafe-delete.gif)
