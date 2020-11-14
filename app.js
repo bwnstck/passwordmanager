@@ -31,23 +31,25 @@ const askForEntry = [
 const SEARCH = "Search your database";
 const DELETE = "Delete";
 const ADD = "Add";
+const EXIT = "Exit";
 
 const choices = [
   {
     type: "list",
     name: "choice",
     message: "What you wanna do? 🍭",
-    choices: [SEARCH, ADD, DELETE],
+    choices: [SEARCH, ADD, DELETE, EXIT],
   },
 ];
 
 start();
 
 async function start() {
-  console.log("-----------------------------------");
-  console.log(magenta().bold(`--== ${white("Database Attack 2000")} ==--`));
-  console.log("-----------------------------------");
+  console.log("\n", "-----------------------------------");
+  console.log(magenta().bold(`--== ${white("Password Safe 2000")} ==--`));
+  console.log("-----------------------------------", "\n");
   await loadingAnimation();
+  console.log("\n", "-----------------------------------", "\n");
   const { masterInput } = await inquirer.prompt(askForMasterPassword);
 
   if (masterInput === process.env.MASTER_PWD) {
@@ -67,6 +69,8 @@ async function makeChoice() {
     await addEntryToDB();
   } else if (choice === DELETE) {
     await deleteEntry();
+  } else if (choice === EXIT) {
+    await closeSession();
   }
 }
 
@@ -74,7 +78,7 @@ async function deleteEntry() {
   const { query } = await inquirer.prompt(askForEntry);
 
   await deleteOne(query);
-  await closeSession();
+  return makeChoice();
 }
 
 async function searchDB() {
@@ -83,14 +87,14 @@ async function searchDB() {
   const entry = await findInDataBase(query);
 
   if (entry) {
-    const pwd = crypto.decrypt(entry.pwd, encryptKey);
-    const email = crypto.decrypt(entry.email, encryptKey);
+    const pwd = crypto.decrypt(entry.pwd, process.env.CRYPTO_PWD);
+    const email = crypto.decrypt(entry.email, process.env.CRYPTO_PWD);
     console.log("-----------------------------------");
     console.log("🎯 Titel: ", red().bold(entry.title));
     console.log("📧 Mail: ", bold(email));
     console.log("🔐 Pwd: ", bold().green(pwd));
     console.log("-----------------------------------");
-    await closeSession();
+    return makeChoice();
   } else {
     console.log("No password safed... try again");
     return searchDB();
@@ -102,10 +106,10 @@ async function addEntryToDB() {
   const collection = await setCollection("passwords");
   await replaceOne(collection, newEntryObj);
   console.log(newEntryObj.title, "Entry saved 🚀");
-  await closeSession();
+  return makeChoice();
 }
 
 async function closeSession() {
   await close();
-  console.log(bold("🇵🇱 Do zobaczenia! 🥦"));
+  console.log("\n", bold("🇵🇱🥦 Do zobaczenia! 🖖"), "\n");
 }

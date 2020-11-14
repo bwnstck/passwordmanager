@@ -1,14 +1,5 @@
 version: "3"
 services:
-  pw-manager:
-    container_name: pw-manager
-    image: bwnstck/pw-manager
-    restart: always
-    build: .
-    ports:
-      - "7500:7500"
-    links:
-      - mongo
   mongo:
     container_name: mongo
     image: mongo
