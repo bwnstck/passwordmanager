@@ -2,6 +2,16 @@ require("dotenv").config();
 
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
+<<<<<<< HEAD
+=======
+const {
+  encryptKey,
+  getPwdObj,
+  getNewEncryptedEntry,
+} = require("./utils/pwdHelpers");
+const fs = require("fs").promises;
+const masterPwd = "admin";
+>>>>>>> EncryptedMasterKey
 
 const { loadingAnimation } = require("./utils/load");
 const { bold, yellow, red, magenta, dim, white } = require("kleur");
@@ -42,6 +52,7 @@ const choices = [
 ];
 
 start();
+<<<<<<< HEAD
 
 async function start() {
   console.log("-----------------------------------");
@@ -56,6 +67,18 @@ async function start() {
     console.log(yellow().bgRed("...so stupid... try again 🦹"));
     start();
   }
+=======
+function start() {
+  _;
+  inquirer.prompt(askForMasterPassword).then((answer) => {
+    if (answer["masterPwd"] === masterPwd) {
+      return makeChoice();
+    } else {
+      console.log(yellow().bgRed("...so stupid... try again 🦹"));
+      return start();
+    }
+  });
+>>>>>>> EncryptedMasterKey
 }
 
 async function makeChoice() {
@@ -70,12 +93,17 @@ async function makeChoice() {
   }
 }
 
+<<<<<<< HEAD
 async function deleteEntry() {
   const { query } = await inquirer.prompt(askForEntry);
 
   await deleteOne(query);
   await closeSession();
 }
+=======
+async function searchDB() {
+  const pwdObj = await getPwdObj();
+>>>>>>> EncryptedMasterKey
 
 async function searchDB() {
   const { query } = await inquirer.prompt(askForEntry);
@@ -83,8 +111,8 @@ async function searchDB() {
   const entry = await findInDataBase(query);
 
   if (entry) {
-    const pwd = crypto.decrypt(entry.pwd, crypto.encryptKey);
-    const email = crypto.decrypt(entry.email, crypto.encryptKey);
+    const pwd = crypto.decrypt(entry.pwd, encryptKey);
+    const email = crypto.decrypt(entry.email, encryptKey);
     console.log("-----------------------------------");
     console.log("🎯 Titel: ", red().bold(entry.title));
     console.log("📧 Mail: ", bold(email));
@@ -98,12 +126,17 @@ async function searchDB() {
 }
 
 async function addEntryToDB() {
+<<<<<<< HEAD
   const newEntryObj = await crypto.getNewEncryptedEntry();
   const collection = await setCollection("passwords");
   await replaceOne(collection, newEntryObj);
   console.log(newEntryObj.title, "Entry saved 🚀");
   await closeSession();
 }
+=======
+  const newEntryObj = await getNewEncryptedEntry();
+  const pwdObj = await getPwdObj();
+>>>>>>> EncryptedMasterKey
 
 async function closeSession() {
   await close();
