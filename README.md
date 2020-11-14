@@ -1,7 +1,5 @@
 # --== Password Safe 2000 ==--
 
-![pwSafe Intro](./assets/passwordSafe2000.gif)
-
 ## Features
 
 - using `node.js` + `inquierer` for running and displaying input/outpu
@@ -31,7 +29,11 @@ where
 - with docker installed just run and make use of the `DB_URL` above:
 
 ```Shell
-    $ docker pull mongo
-
-    $ docker run --name pwdatabase -d -p 27017:27017 mongo --noauth --bind_ip=0.0.0.0`
+    $ docker-compose up
 ```
+
+## Start
+
+- run `node app.js` in the project-root in your favourite Terminal
+
+![pwSafe Intro](./assets/passwordSafe2000.gif)
