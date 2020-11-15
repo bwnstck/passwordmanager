@@ -53,28 +53,13 @@ async function findInDataBase(query) {
 async function listDbEntries() {
   try {
     const entries = await collection.find({});
-
-    // Mapping starts here
-    await Promise.all(
-      entries.map((entry) => {
-        console.log("🎯", red().bold(entry.title));
-        console.log("--------------i was maped---------------------");
-      })
-    );
-
-    // For-Each starts here
-    function iterateFunc(entry) {
+    await entries.forEach((entry) => {
       console.log("🎯", red().bold(entry.title));
-      console.log("----------------i was forEached-------------------");
-    }
-
-    function errorFunc(error) {
-      console.log(error);
-    }
-    await entries.forEach(iterateFunc, errorFunc);
+      console.log("-----------------------------------");
+    });
     return;
   } catch (error) {
-    console.error(error);
+    console.error("Error while listing entries \n", error);
   }
 }
 
