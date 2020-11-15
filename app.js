@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const inquirer = require("inquirer");
 const crypto = require("./utils/crypto");
+const questions = require("./lib/questions");
 
 const { loadingAnimation } = require("./utils/load");
 const { bold, yellow, red, magenta, dim, white } = require("kleur");
@@ -16,75 +17,6 @@ const {
   listEntriesFromMail,
 } = require("./utils/database");
 
-const askForMasterPassword = [
-  {
-    type: "password",
-    name: "masterInput",
-    message: "🔒 Enter MasterPassword 🔒 ",
-  },
-];
-const askForEntry = [
-  {
-    type: "input",
-    name: "query",
-    message: "🔘 For which entry?",
-  },
-];
-
-const SEARCH = "Search in your database";
-const DELETE = "Delete";
-const ADD = "Add";
-const EXIT = "Exit";
-
-const areYouSure = [
-  {
-    type: "confirm",
-    name: "answer",
-    message: "Are you sure? (YES/NO)",
-  },
-];
-const choices = [
-  {
-    type: "list",
-    name: "choice",
-    message: "What you wanna do? 🍭",
-    choices: [SEARCH, ADD, DELETE, EXIT],
-  },
-];
-
-const DELETEONE = "Delete a single entry";
-const DELETEALL = "Delete EVERYTHING ... 🤦️";
-
-const deleteGeneral = [
-  {
-    type: "list",
-    name: "choice",
-    message: "What you wanna do? 🍭",
-    choices: [DELETEONE, DELETEALL],
-  },
-];
-
-const SEARCHONE = "Search one entry";
-const SEARCHALL = "Show all";
-const SEARCHMAIL = "Search for specific mail";
-
-const dbSearchChoices = [
-  {
-    type: "list",
-    name: "dbChoice",
-    message: "What you wanna do? 🍭",
-    choices: [SEARCHONE, SEARCHMAIL, SEARCHALL],
-  },
-];
-
-const mailSearch = [
-  {
-    type: "input",
-    name: "mailPicked",
-    message: "Enter e-mail you want to show entries from:",
-  },
-];
-
 start();
 
 async function start() {
@@ -94,7 +26,7 @@ async function start() {
   await loadingAnimation();
   console.log("\n", "-----------------------------------", "\n");
 
-  const { masterInput } = await inquirer.prompt(askForMasterPassword);
+  const { masterInput } = await inquirer.prompt(questions.askForMasterPassword);
 
   if (masterInput === process.env.MASTER_PWD) {
     await makeChoice();
@@ -105,27 +37,32 @@ async function start() {
 }
 
 async function makeChoice() {
-  const { choice } = await inquirer.prompt(choices);
+  const { choice } = await inquirer.prompt(questions.choices);
 
-  if (choice === SEARCH) {
-    const { dbChoice } = await inquirer.prompt(dbSearchChoices);
-    if (dbChoice === SEARCHONE) {
-      searchDB();
+  if (choice === questions.SEARCH) {
+    const { dbChoice } = await inquirer.prompt(questions.dbSearchChoices);
+    if (dbChoice === questions.SEARCHONE) {
+      const entries = await listDbEntries();
+      if (entries) {
+        await searchDB();
+      } else {
+        await makeChoice();
+      }
     }
-    if (dbChoice === SEARCHALL) {
+    if (dbChoice === questions.SEARCHALL) {
       await listDbEntries();
       await makeChoice();
     }
-    if (dbChoice === SEARCHMAIL) {
-      const { mailPicked } = await inquirer.prompt(mailSearch);
+    if (dbChoice === questions.SEARCHMAIL) {
+      const { mailPicked } = await inquirer.prompt(questions.mailSearch);
       await listEntriesFromMail(mailPicked);
       await makeChoice();
     }
-  } else if (choice === ADD) {
+  } else if (choice === questions.ADD) {
     await addEntryToDB();
-  } else if (choice === DELETE) {
+  } else if (choice === questions.DELETE) {
     await deleteEntry();
-  } else if (choice === EXIT) {
+  } else if (choice === questions.EXIT) {
     await closeSession();
   } else {
     makeChoice();
@@ -134,11 +71,11 @@ async function makeChoice() {
 
 async function deleteEntry() {
   await listDbEntries();
-  const { choice } = await inquirer.prompt(deleteGeneral);
+  const { choice } = await inquirer.prompt(questions.deleteGeneral);
 
-  if (choice === DELETEONE) {
-    const { query } = await inquirer.prompt(askForEntry);
-    const { answer } = await inquirer.prompt(areYouSure);
+  if (choice === questions.DELETEONE) {
+    const { query } = await inquirer.prompt(questions.askForEntry);
+    const { answer } = await inquirer.prompt(questions.areYouSure);
     if (!answer) {
       return makeChoice();
     } else {
@@ -152,7 +89,7 @@ async function deleteEntry() {
 }
 
 async function deleteAllEntries() {
-  const { answer } = await inquirer.prompt(areYouSure);
+  const { answer } = await inquirer.prompt(questions.areYouSure);
   if (answer === false) {
     return makeChoice();
   } else {
@@ -162,7 +99,7 @@ async function deleteAllEntries() {
 }
 
 async function searchDB() {
-  const { query } = await inquirer.prompt(askForEntry);
+  const { query } = await inquirer.prompt(questions.askForEntry);
 
   const entry = await findInDataBase(query);
 
@@ -177,7 +114,7 @@ async function searchDB() {
     return makeChoice();
   } else {
     console.log("No password safed... try again");
-    return searchDB();
+    return makeChoice();
   }
 }
 
@@ -185,7 +122,7 @@ async function addEntryToDB() {
   const newEntryObj = await crypto.getNewEncryptedEntry();
   const collection = await setCollection("passwords");
   await replaceOne(collection, newEntryObj);
-  console.log(newEntryObj.title, "Entry saved 🚀");
+  console.log(newEntryObj.title, " saved in Database 🚀");
   return makeChoice();
 }
 

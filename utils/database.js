@@ -53,11 +53,22 @@ async function findInDataBase(query) {
 async function listDbEntries() {
   try {
     const entries = await collection.find({});
-    await entries.forEach((entry) => {
-      console.log("🎯", red().bold(entry.title));
-      console.log("-----------------------------------");
-    });
-    return;
+    const encryptedEntries = await entries
+      .map((entry) => {
+        console.log("🎯", red().bold(entry.title));
+        console.log("-----------------------------------");
+        return entry;
+      })
+      .toArray();
+    if (encryptedEntries.length > 0) {
+      return true;
+    } else {
+      console.log("\n-----------------------------------");
+      console.log("        🤷‍♂️ no entries saved 🤷‍♂️");
+      console.log("🚀 start adding entries in the next prompt ➕ ");
+      console.log("-----------------------------------\n");
+      return false;
+    }
   } catch (error) {
     console.error("Error while listing entries \n", error);
   }
