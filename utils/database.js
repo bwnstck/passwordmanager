@@ -74,7 +74,6 @@ async function listEntriesFromMail(mailQuery) {
       return entry;
     })
     .toArray();
-  console.log({ encryptedEntries });
 
   const decryptedEntries = await encryptedEntries.map((entry) => {
     entry.email = crypto.decrypt(entry.email);
@@ -108,6 +107,16 @@ async function deleteOne(query) {
     console.error(error);
   }
 }
+async function deleteAll() {
+  try {
+    const deleted = await collection.deleteMany({});
+    console.log(
+      `DB fully destroyed removed forever // ${deleted.deletedCount} entries removed `
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 exports.connect = connect;
 exports.close = close;
@@ -116,4 +125,5 @@ exports.replaceOne = replaceOne;
 exports.findInDataBase = findInDataBase;
 exports.listDbEntries = listDbEntries;
 exports.deleteOne = deleteOne;
+exports.deleteAll = deleteAll;
 exports.listEntriesFromMail = listEntriesFromMail;
