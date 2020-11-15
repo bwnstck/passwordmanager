@@ -10,7 +10,7 @@ async function connect(url, dbName) {
     client = await MongoClient.connect(url, { useUnifiedTopology: true });
   } catch (error) {
     console.log(
-      "\n \n ----------------------------------- \n \n",
+      "\n \n --------------ERROR---------------- \n \n",
       error,
       "\n \n ----------------------------------- \n \n",
       "⛔️ You've been defeated by the guards 🤺🤺🤺 ⛔️",
@@ -53,6 +53,7 @@ async function findInDataBase(query) {
 async function listDbEntries() {
   try {
     const entries = await collection.find({});
+    console.log("\n------------All Entries-------------");
     const encryptedEntries = await entries
       .map((entry) => {
         console.log("🎯", red().bold(entry.title));

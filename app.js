@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const inquirer = require("inquirer");
+inquirer.registerPrompt("search-list", require("inquirer-search-list"));
+
 const crypto = require("./utils/crypto");
 const questions = require("./lib/questions");
 
@@ -106,14 +108,16 @@ async function searchDB() {
   if (entry) {
     const pwd = crypto.decrypt(entry.pwd, process.env.CRYPTO_PWD);
     const email = crypto.decrypt(entry.email, process.env.CRYPTO_PWD);
-    console.log("-----------------------------------");
+    console.log("---------You searched for----------");
     console.log("🎯 Titel: ", red().bold(entry.title));
     console.log("📧 Mail: ", bold(email));
     console.log("🔐 Pwd: ", bold().green(pwd));
     console.log("-----------------------------------");
     return makeChoice();
   } else {
-    console.log("No password safed... try again");
+    console.log("\n-----------------------------------");
+    console.log(" ♦️ No password safed... try again ♦️");
+    console.log("-----------------------------------\n");
     return makeChoice();
   }
 }
@@ -122,7 +126,10 @@ async function addEntryToDB() {
   const newEntryObj = await crypto.getNewEncryptedEntry();
   const collection = await setCollection("passwords");
   await replaceOne(collection, newEntryObj);
+  console.log("\n-----Password created------------");
   console.log(newEntryObj.title, " saved in Database 🚀");
+  console.log("-----------------------------------\n");
+
   return makeChoice();
 }
 
