@@ -1,6 +1,6 @@
 const { red, bold, green } = require("kleur");
 const { MongoClient } = require("mongodb");
-
+const crypto = require("./crypto");
 let client;
 let db;
 let collection;
@@ -54,13 +54,53 @@ async function listDbEntries() {
   try {
     const entries = await collection.find({});
     await entries.forEach((entry) => {
+      console.log(JSON.stringify(entry));
       console.log("🎯", red().bold(entry.title));
+      // console.log("✉️", entry.email);
       console.log("-----------------------------------");
     });
     return;
   } catch (error) {
     console.error("Error while listing entries \n", error);
   }
+}
+async function listEntriesFromMail(mailQuery) {
+  let entries;
+  try {
+    entries = await collection.find({});
+  } catch (error) {
+    console.error("Error while listing entries \n", error);
+  }
+  const encryptedEntries = await entries
+    .map((entry) => {
+      return entry;
+    })
+    .toArray();
+  console.log({ encryptedEntries });
+
+  const decryptedEntries = await encryptedEntries.map((entry) => {
+    entry.email = crypto.decrypt(entry.email);
+    entry.pwd = crypto.decrypt(entry.pwd);
+    return entry;
+  });
+  console.log(decryptedEntries);
+  const result = decryptedEntries.filter((entry, index) => {
+    console.log(index, " entry mail: ", entry.email);
+    return entry.email === mailQuery;
+  });
+
+  if (result.length > 0) {
+    console.log(` All entries for ${mailQuery}`);
+    await result.forEach((entry) => {
+      console.log("🎯", red().bold(entry.title));
+      console.log("🎯", entry.mail);
+      console.log("-----------------------------------");
+    });
+  } else {
+    console.log(`\n...no entries found for ${mailQuery} 🤷 \n`);
+  }
+
+  return;
 }
 
 async function deleteOne(query) {
@@ -79,3 +119,4 @@ exports.replaceOne = replaceOne;
 exports.findInDataBase = findInDataBase;
 exports.listDbEntries = listDbEntries;
 exports.deleteOne = deleteOne;
+exports.listEntriesFromMail = listEntriesFromMail;

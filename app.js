@@ -12,6 +12,7 @@ const {
   findInDataBase,
   listDbEntries,
   deleteOne,
+  listEntriesFromMail,
 } = require("./utils/database");
 
 const askForMasterPassword = [
@@ -45,13 +46,22 @@ const choices = [
 
 const SEARCHONE = "Search one entry";
 const SEARCHALL = "Show all";
+const SEARCHMAIL = "Search for specific mail";
 
 const dbSearchChoices = [
   {
     type: "list",
     name: "dbChoice",
     message: "What you wanna do? 🍭",
-    choices: [SEARCHONE, SEARCHALL],
+    choices: [SEARCHONE, SEARCHMAIL, SEARCHALL],
+  },
+];
+
+const mailSearch = [
+  {
+    type: "input",
+    name: "mailPicked",
+    message: "Enter e-mail you want to show entries from:",
   },
 ];
 
@@ -81,8 +91,14 @@ async function makeChoice() {
     const { dbChoice } = await inquirer.prompt(dbSearchChoices);
     if (dbChoice === SEARCHONE) {
       searchDB();
-    } else {
+    }
+    if (dbChoice === SEARCHALL) {
       await listDbEntries();
+      await makeChoice();
+    }
+    if (dbChoice === SEARCHMAIL) {
+      const { mailPicked } = await inquirer.prompt(mailSearch);
+      await listEntriesFromMail(mailPicked);
       await makeChoice();
     }
   } else if (choice === ADD) {
