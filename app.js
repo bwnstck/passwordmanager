@@ -12,6 +12,7 @@ const {
   findInDataBase,
   listDbEntries,
   deleteOne,
+  deleteAll,
   listEntriesFromMail,
 } = require("./utils/database");
 
@@ -35,12 +36,31 @@ const DELETE = "Delete";
 const ADD = "Add";
 const EXIT = "Exit";
 
+const areYouSure = [
+  {
+    type: "confirm",
+    name: "answer",
+    message: "Are you sure? (YES/NO)",
+  },
+];
 const choices = [
   {
     type: "list",
     name: "choice",
     message: "What you wanna do? 🍭",
     choices: [SEARCH, ADD, DELETE, EXIT],
+  },
+];
+
+const DELETEONE = "Delete a single entry";
+const DELETEALL = "Delete EVERYTHING ... 🤦️";
+
+const deleteGeneral = [
+  {
+    type: "list",
+    name: "choice",
+    message: "What you wanna do? 🍭",
+    choices: [DELETEONE, DELETEALL],
   },
 ];
 
@@ -113,10 +133,32 @@ async function makeChoice() {
 }
 
 async function deleteEntry() {
-  const { query } = await inquirer.prompt(askForEntry);
+  await listDbEntries();
+  const { choice } = await inquirer.prompt(deleteGeneral);
 
-  await deleteOne(query);
-  return makeChoice();
+  if (choice === DELETEONE) {
+    const { query } = await inquirer.prompt(askForEntry);
+    const { answer } = await inquirer.prompt(areYouSure);
+    if (!answer) {
+      return makeChoice();
+    } else {
+      await deleteOne(query);
+      return makeChoice();
+    }
+  } else {
+    await deleteAllEntries();
+    return makeChoice();
+  }
+}
+
+async function deleteAllEntries() {
+  const { answer } = await inquirer.prompt(areYouSure);
+  if (answer === false) {
+    return makeChoice();
+  } else {
+    await deleteAll();
+    return makeChoice();
+  }
 }
 
 async function searchDB() {
