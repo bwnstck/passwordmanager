@@ -54,9 +54,7 @@ async function listDbEntries() {
   try {
     const entries = await collection.find({});
     await entries.forEach((entry) => {
-      console.log(JSON.stringify(entry));
       console.log("🎯", red().bold(entry.title));
-      // console.log("✉️", entry.email);
       console.log("-----------------------------------");
     });
     return;
@@ -83,9 +81,8 @@ async function listEntriesFromMail(mailQuery) {
     entry.pwd = crypto.decrypt(entry.pwd);
     return entry;
   });
-  console.log(decryptedEntries);
-  const result = decryptedEntries.filter((entry, index) => {
-    console.log(index, " entry mail: ", entry.email);
+
+  const result = decryptedEntries.filter((entry) => {
     return entry.email === mailQuery;
   });
 
@@ -93,7 +90,7 @@ async function listEntriesFromMail(mailQuery) {
     console.log(` All entries for ${mailQuery}`);
     await result.forEach((entry) => {
       console.log("🎯", red().bold(entry.title));
-      console.log("🎯", entry.mail);
+      console.log("✉️", entry.email);
       console.log("-----------------------------------");
     });
   } else {

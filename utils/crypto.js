@@ -25,7 +25,7 @@ const askForNewPassword = [
 ];
 
 function encrypt(data, pwd) {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), pwd).toString();
+  return CryptoJS.AES.encrypt(data, pwd).toString();
 }
 function decrypt(data) {
   const bytes = CryptoJS.AES.decrypt(data, process.env.CRYPTO_PWD);
