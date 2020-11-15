@@ -49,26 +49,35 @@ async function findInDataBase(query) {
     console.error(error);
   }
 }
+
 async function listDbEntries() {
   try {
-    const cursor = await collection.find({});
-    let counter = 1;
+    const entries = await collection.find({});
+
+    // Mapping starts here
+    await Promise.all(
+      entries.map((entry) => {
+        console.log("🎯", red().bold(entry.title));
+        console.log("--------------i was maped---------------------");
+      })
+    );
+
+    // For-Each starts here
     function iterateFunc(entry) {
-      console.log(counter);
       console.log("🎯", red().bold(entry.title));
-      console.log("-----------------------------------");
-      counter++;
+      console.log("----------------i was forEached-------------------");
     }
 
     function errorFunc(error) {
       console.log(error);
     }
-    await cursor.forEach(iterateFunc, errorFunc);
+    await entries.forEach(iterateFunc, errorFunc);
     return;
   } catch (error) {
     console.error(error);
   }
 }
+
 async function deleteOne(query) {
   try {
     await collection.deleteOne({ title: query });
