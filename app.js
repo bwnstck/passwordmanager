@@ -7,7 +7,7 @@ const crypto = require("./utils/crypto");
 const questions = require("./lib/questions");
 
 const { loadingAnimation } = require("./utils/load");
-const { bold, yellow, red, magenta, dim, white } = require("kleur");
+const { bold, yellow, red, magenta, dim, white, cyan, blue } = require("kleur");
 const {
   close,
   setCollection,
@@ -19,15 +19,20 @@ const {
   listEntriesFromMail,
 } = require("./utils/database");
 
+const capitalizeFLetter = (string) => string[0].toUpperCase() + string.slice(1);
 start();
 
 async function start() {
   console.log("\n", "-----------------------------------");
   console.log(magenta().bold(`--== ${white("Password Safe 2000")} ==--`));
+  console.log(
+    bold(`\n     Welcome back ${cyan(capitalizeFLetter(process.env.USER))} `)
+  );
+  console.log(yellow().bold(`\n     You are running on`));
+  console.log(blue(`          ${process.env.LC_TERMINAL} `));
   console.log("-----------------------------------", "\n");
   await loadingAnimation();
   console.log("\n", "-----------------------------------", "\n");
-
   const { masterInput } = await inquirer.prompt(questions.askForMasterPassword);
 
   if (masterInput === process.env.MASTER_PWD) {
