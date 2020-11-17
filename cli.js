@@ -17,6 +17,7 @@ const {
   deleteOne,
   deleteAll,
   listEntriesFromMail,
+  addEntryToDB,
 } = require("./utils/database");
 
 const capitalizeFLetter = (string) => string[0].toUpperCase() + string.slice(1);
@@ -67,6 +68,7 @@ async function makeChoice() {
     }
   } else if (choice === questions.ADD) {
     await addEntryToDB();
+    makeChoice();
   } else if (choice === questions.DELETE) {
     await deleteEntry();
   } else if (choice === questions.EXIT) {
@@ -130,3 +132,5 @@ async function closeSession() {
   await close();
   console.log("\n", bold("🇵🇱🥦 Do zobaczenia! 🖖"), "\n");
 }
+
+exports.makeChoice = makeChoice;

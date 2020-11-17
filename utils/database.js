@@ -1,5 +1,6 @@
 const { red, bold, green } = require("kleur");
 const { MongoClient } = require("mongodb");
+const { makeChoice } = require("../cli");
 const { encryptEntry } = require("./crypto");
 const crypto = require("./crypto");
 let client;
@@ -43,9 +44,9 @@ async function addEntryToDB(terminal = true, newEntryObj = {}) {
   console.log("\n-----Password created------------");
   console.log(newEntryObj.title, " saved in Database 🚀");
   console.log("-----------------------------------\n");
-  if (terminal) {
-    return makeChoice();
-  }
+  // if (terminal) {
+  //   await makeChoice();
+  // }
   return;
 }
 
