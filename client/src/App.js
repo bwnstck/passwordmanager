@@ -10,27 +10,19 @@ async function getPasswordsExpress() {
 function App() {
   const [passwords, setPasswords] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      setPasswords(await getPasswordsExpress());
-    }
-    fetchData();
-  }, []);
-
   return (
     <div className="App">
       <button
-        onClick={(event) => {
-          event.preventDefault();
-          getPasswordsExpress();
+        onClick={async () => {
+          setPasswords(await getPasswordsExpress());
         }}
       >
         Click me
       </button>
       <div className="output">
         {passwords &&
-          passwords.map((pwd, index) => {
-            return <li key={index}>{pwd.title}</li>;
+          passwords.map((pwd) => {
+            return <li key={pwd._id}>{pwd.title}</li>;
           })}
       </div>
     </div>
