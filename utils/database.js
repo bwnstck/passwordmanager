@@ -1,5 +1,6 @@
 const { red, bold, green } = require("kleur");
 const { MongoClient } = require("mongodb");
+const { encryptEntry } = require("./crypto");
 const crypto = require("./crypto");
 let client;
 let db;
@@ -31,7 +32,24 @@ function setCollection(name) {
   return collection;
 }
 
-async function replaceOne(collection, newEntryObj) {
+async function addEntryToDB(terminal = true, newEntryObj = {}) {
+  if (terminal) {
+    newEntryObj = await crypto.getNewEncryptedEntry();
+  } else {
+    newEntryObj = await encryptEntry(newEntryObj);
+  }
+
+  await replaceOne(newEntryObj);
+  console.log("\n-----Password created------------");
+  console.log(newEntryObj.title, " saved in Database 🚀");
+  console.log("-----------------------------------\n");
+  if (terminal) {
+    return makeChoice();
+  }
+  return;
+}
+
+async function replaceOne(newEntryObj) {
   try {
     await collection.replaceOne({ title: newEntryObj.title }, newEntryObj, {
       upsert: true,
@@ -50,7 +68,7 @@ async function findInDataBase(query) {
   }
 }
 
-async function listDbEntries() {
+async function listDbEntries(terminal = true) {
   try {
     const entries = await collection.find({});
     console.log("\n------------All Entries-------------");
@@ -61,19 +79,25 @@ async function listDbEntries() {
         return entry;
       })
       .toArray();
-    if (encryptedEntries.length > 0) {
+    if (encryptedEntries.length > 0 && terminal) {
       return true;
-    } else {
+    } else if (encryptedEntries.length <= 0 && terminal) {
       console.log("\n-----------------------------------");
       console.log("        🤷‍♂️ no entries saved 🤷‍♂️");
       console.log("🚀 start adding entries in the next prompt ➕ ");
       console.log("-----------------------------------\n");
       return false;
     }
+    if (encryptedEntries.length > 0 && !terminal) {
+      return JSON.stringify(encryptedEntries);
+    } else {
+      return "No entries";
+    }
   } catch (error) {
     console.error("Error while listing entries \n", error);
   }
 }
+
 async function listEntriesFromMail(mailQuery) {
   let entries;
   try {
@@ -133,6 +157,7 @@ async function deleteAll() {
 exports.connect = connect;
 exports.close = close;
 exports.setCollection = setCollection;
+exports.addEntryToDB = addEntryToDB;
 exports.replaceOne = replaceOne;
 exports.findInDataBase = findInDataBase;
 exports.listDbEntries = listDbEntries;

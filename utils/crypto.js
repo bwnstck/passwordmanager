@@ -38,6 +38,11 @@ const getPwdObj = async () => {
   return pwdObj;
 };
 
+async function encryptEntry(newEntryObj) {
+  newEntryObj.email = encrypt(newEntryObj.email, process.env.CRYPTO_PWD);
+  newEntryObj.pwd = encrypt(newEntryObj.pwd, process.env.CRYPTO_PWD);
+  return newEntryObj;
+}
 async function getNewEncryptedEntry() {
   const { title } = await inquirer.prompt(askForTitel);
   const { mail } = await inquirer.prompt(askForMail);
@@ -52,5 +57,6 @@ module.exports = {
   encrypt,
   decrypt,
   getPwdObj,
+  encryptEntry,
   getNewEncryptedEntry,
 };

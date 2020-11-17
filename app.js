@@ -126,18 +126,6 @@ async function searchDB() {
     return makeChoice();
   }
 }
-
-async function addEntryToDB() {
-  const newEntryObj = await crypto.getNewEncryptedEntry();
-  const collection = await setCollection("passwords");
-  await replaceOne(collection, newEntryObj);
-  console.log("\n-----Password created------------");
-  console.log(newEntryObj.title, " saved in Database 🚀");
-  console.log("-----------------------------------\n");
-
-  return makeChoice();
-}
-
 async function closeSession() {
   await close();
   console.log("\n", bold("🇵🇱🥦 Do zobaczenia! 🖖"), "\n");
