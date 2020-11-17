@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import styled from "styled-components/macro";
 import "./App.css";
+
+const PasswordSearchForm = styled.form`
+  width: 80%;
+`;
 
 async function getPasswordsExpress() {
   const request = await fetch("http://localhost:3001/api/passwords/");
@@ -12,6 +17,7 @@ function App() {
 
   return (
     <div className="App">
+      <PasswordSearchForm />
       <button
         onClick={async () => {
           setPasswords(await getPasswordsExpress());
