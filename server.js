@@ -13,7 +13,12 @@ const { loadingAnimation } = require("./utils/load");
 
 const app = express();
 app.use(express.json());
-const port = 3000;
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  next();
+});
+
+const port = 3001;
 
 //! List all entries
 app.get("/api/passwords/", async (request, response) => {

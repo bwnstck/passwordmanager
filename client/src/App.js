@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+
+async function getPasswordsExpress() {
+  const request = await fetch("http://localhost:3001/api/passwords/");
+  const data = await request.json();
+  return data;
+}
 
 function App() {
+  const [passwords, setPasswords] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setPasswords(await getPasswordsExpress());
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button
+        onClick={(event) => {
+          event.preventDefault();
+          getPasswordsExpress();
+        }}
+      >
+        Click me
+      </button>
+      <div className="output">
+        {passwords &&
+          passwords.map((pwd, index) => {
+            return <li key={index}>{pwd.title}</li>;
+          })}
+      </div>
     </div>
   );
 }
