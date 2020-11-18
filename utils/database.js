@@ -60,12 +60,8 @@ async function replaceOne(newEntryObj) {
 }
 
 async function findInDataBase(query) {
-  try {
-    const result = await collection.findOne({ title: query });
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
+  const result = await collection.findOne({ title: query });
+  return result;
 }
 
 async function listDbEntries(terminal = true) {

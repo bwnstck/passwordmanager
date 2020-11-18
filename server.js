@@ -18,10 +18,10 @@ app.use((req, res, next) => {
   next();
 });
 
-const port = 3001;
+const port = 3002;
 
 //! List all entries
-app.get("/api/passwords/", async (request, response) => {
+app.get("/api/passwords", async (request, response) => {
   console.log("test");
   const allEntries = await listDbEntries(false);
   console.log({ allEntries });
@@ -46,9 +46,21 @@ app.delete("/api/passwords/:title", function (req, res) {
 
 //! List a specific name
 app.get("/api/passwords/:name", async (request, response) => {
-  const { name } = request.params;
-  const passwordValue = await findInDataBase(name);
-  response.send(passwordValue);
+  try {
+    const { name } = request.params;
+    const passwordValue = await findInDataBase(name);
+    passwordValue.json();
+    console.log("HALLLOOO?????");
+    console.log("pwValue", passwordValue);
+
+    if (!passwordValue) {
+      response.status(404).send("No password for input");
+      return;
+    }
+    response.json(passwordValue);
+  } catch (error) {
+    response.status(419).send("Internal Server Error because of TeaPot");
+  }
 });
 
 //! Add a entry
