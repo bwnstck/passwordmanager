@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components/macro";
 import "./App.css";
-import crypto from "../../utils/crypto";
+// import crypto from "../../utils/crypto";
 const PasswordSearchForm = styled.form`
   width: 80%;
 `;
@@ -11,18 +11,18 @@ function App() {
   const [searchEntries, setSearchEntries] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  function decryptEntries(entries) {
-    const encryptedEntries = entries.map((entry) => {
-      entry.pwd = crypto.decrypt(entry.pwd, process.env.CRYPTO_PWD);
-      entry.email = crypto.decrypt(entry.email, process.env.CRYPTO_PWD);
-    });
-    return encryptedEntries;
-  }
+  // function decryptEntries(entries) {
+  //   const encryptedEntries = entries.map((entry) => {
+  //     entry.pwd = crypto.decrypt(entry.pwd, process.env.CRYPTO_PWD);
+  //     entry.email = crypto.decrypt(entry.email, process.env.CRYPTO_PWD);
+  //   });
+  //   return encryptedEntries;
+  // }
 
   const handleSubmit = async (inputValue) => {
     const passwords = await getSpecificEntryExpress(inputValue);
-    const encryptedEntries = decryptEntries(passwords);
-    setSearchEntries(encryptedEntries);
+    // const encryptedEntries = decryptEntries(passwords);
+    setSearchEntries(passwords);
   };
 
   return (

@@ -22,6 +22,7 @@ const port = 3001;
 
 //! List all entries
 app.get("/api/passwords/", async (request, response) => {
+  console.log("test");
   const allEntries = await listDbEntries(false);
   console.log({ allEntries });
   response.send(allEntries);
