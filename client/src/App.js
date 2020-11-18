@@ -68,12 +68,12 @@ function App() {
 export default App;
 
 async function getAllPwdsExpress() {
-  const request = await fetch("http://localhost:3001/api/passwords/");
+  const request = await fetch("/api/passwords/");
   const data = await request.json();
   return data;
 }
 async function getSpecificEntryExpress(input) {
-  const request = await fetch(`http://localhost:3001/api/passwords/${input}`);
+  const request = await fetch(`/api/passwords/${input}`);
   const data = await request.json();
   return [data];
 }
