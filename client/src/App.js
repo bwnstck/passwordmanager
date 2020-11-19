@@ -40,11 +40,23 @@ const Button = styled.button`
 `;
 
 function App() {
-  // const [searchEntries, setSearchEntries] = useState([]);
+  const [dataContainer, setDataContainer] = useState([]);
+
   const [inputValue, setInputValue] = useState("");
-  const { data, loading, error, doFetch } = useAsync(async () =>
-    getSpecificEntryExpress(inputValue)
-  );
+
+  const {
+    data: specificQuery,
+    loading,
+    error,
+    doFetch: setSpecificEntry,
+  } = useAsync(getSpecificEntryExpress);
+
+  const {
+    data: allQuery,
+    // loading: loadingAll,
+    // error: errorAll,
+    doFetch: setAllQuery,
+  } = useAsync(async () => getAllPwdsExpress());
 
   return (
     <Wrapper className="App">
@@ -53,8 +65,8 @@ function App() {
         <PasswordSearchForm
           onSubmit={async (event) => {
             event.preventDefault();
-
-            doFetch();
+            await setSpecificEntry(inputValue);
+            setDataContainer(specificQuery);
           }}
         >
           <PasswordInput
@@ -67,18 +79,21 @@ function App() {
           />
           <Button onClick={async () => {}}>Click me</Button>
         </PasswordSearchForm>
-        {/* <Button
+        <Button
           onClick={async () => {
-            setSearchEntries(await getAllPwdsExpress());
+            setAllQuery();
+            setDataContainer(allQuery);
+            console.log("search all");
           }}
         >
           Show all
-        </Button> */}
+        </Button>
+
         <div className="output">
           {loading && <h3>Loading...</h3>}
           {error && <h3>{error.message}</h3>}
-          {data &&
-            data.map((pwd) => {
+          {dataContainer &&
+            dataContainer.map((pwd) => {
               return (
                 <li key={pwd._id}>
                   <h5>{pwd.title}</h5>
@@ -94,11 +109,11 @@ function App() {
 
 export default App;
 
-// async function getAllPwdsExpress() {
-//   const request = await fetch("/api/passwords/");
-//   const data = await request.json();
-//   return data;
-// }
+async function getAllPwdsExpress() {
+  const request = await fetch("/api/passwords/");
+  const data = await request.json();
+  return data;
+}
 async function getSpecificEntryExpress(input) {
   const response = await fetch(`/api/passwords/${input}`);
   if (!response.ok) {

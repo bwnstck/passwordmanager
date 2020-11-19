@@ -13,10 +13,6 @@ const { loadingAnimation } = require("./utils/load");
 
 const app = express();
 app.use(express.json());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  next();
-});
 
 const port = 3002;
 
@@ -49,8 +45,7 @@ app.get("/api/passwords/:name", async (request, response) => {
   try {
     const { name } = request.params;
     const passwordValue = await findInDataBase(name);
-    passwordValue.json();
-    console.log("HALLLOOO?????");
+    // passwordValue.json();
     console.log("pwValue", passwordValue);
 
     if (!passwordValue) {
@@ -59,12 +54,13 @@ app.get("/api/passwords/:name", async (request, response) => {
     }
     response.json(passwordValue);
   } catch (error) {
+    console.error(error);
     response.status(419).send("Internal Server Error because of TeaPot");
   }
 });
 
 //! Add a entry
-app.post("/api/passwords/", async (request, response) => {
+app.post("/api/passwords", async (request, response) => {
   const newEntry = request.body;
   try {
     await addEntryToDB((terminal = false), {

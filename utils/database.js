@@ -66,7 +66,7 @@ async function findInDataBase(query) {
 
 async function listDbEntries(terminal = true) {
   try {
-    const entries = await collection.find({});
+    const entries = await collection.find({}, { title: 1 });
     console.log("\n------------All Entries-------------");
     const encryptedEntries = await entries
       .map((entry) => {
