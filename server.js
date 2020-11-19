@@ -17,7 +17,7 @@ const { loadingAnimation } = require("./utils/load");
 const app = express();
 app.use(express.json());
 
-const port = 3002;
+const port = process.env.port || 3002;
 
 //! List all entries
 app.get("/api/passwords", async (request, response) => {
@@ -92,7 +92,6 @@ app.use(
 app.get("*", (request, response) => {
   response.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
-
 
 async function run() {
   await loadingAnimation();
