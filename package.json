@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
+    "storybook": "cd client && npm run storybook",
     "start": "concurrently \"nodemon server.js\" \"cd client && npm start\" \"cd client && npm run storybook\" ",
     "postinstall": "cd client && npm install"
   },
