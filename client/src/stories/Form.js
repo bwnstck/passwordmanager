@@ -11,10 +11,18 @@ export const PasswordInput = styled.input`
   border-radius: 3px;
 `;
 
-export default function Form() {
+export default function Form({
+  onSubmitForm,
+  onChangeInput,
+  inputPlaceholder,
+}) {
   return (
-    <PasswordSearchForm>
-      <PasswordInput />
+    <PasswordSearchForm onSubmit={onSubmitForm}>
+      <PasswordInput
+        placeholder={inputPlaceholder}
+        type="text"
+        onChange={onChangeInput}
+      />
     </PasswordSearchForm>
   );
 }

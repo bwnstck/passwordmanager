@@ -2,42 +2,18 @@ import { useState } from "react";
 import styled from "styled-components/macro";
 import "./App.css";
 
-import Safe from "./assets/safe.svg";
 import useAsync from "./hooks/useAsync";
+import { Button } from "./stories/Button";
+import Form from "./stories/Form";
+import { Wrapper } from "./stories/Wrapper";
 
-const PasswordSearchForm = styled.form`
-  width: 80%;
-`;
-const PasswordInput = styled.input`
-  margin: 1rem auto;
-  padding: 1rem 0;
-  border-radius: 3px;
-`;
-const Title = styled.h1``;
-
-const Wrapper = styled.div`
-  min-height: 100vh;
-  width: 100vw;
-  background-color: grey;
-  background-image: url(${Safe});
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position-y: bottom;
-  background-position-x: center;
-
-  color: white;
-`;
 const DimmedBG = styled.div`
   background-color: rgba(0, 0, 0, 0.8);
   padding: 1rem;
   border-radius: 3px;
 `;
 
-const Button = styled.button`
-  padding: 1rem;
-  background-color: palegoldenrod;
-  border-radius: 5px;
-`;
+const Title = styled.h1``;
 
 function App() {
   const [dataContainer, setDataContainer] = useState([]);
@@ -62,23 +38,20 @@ function App() {
     <Wrapper className="App">
       <DimmedBG>
         <Title>--== PasswordManager 2000 ==--</Title>
-        <PasswordSearchForm
-          onSubmit={async (event) => {
+        <Form
+          onChangeInput={(event) => {
+            event.preventDefault();
+            setInputValue(event.target.value);
+          }}
+          onSubmitForm={async (event) => {
             event.preventDefault();
             await setSpecificEntry(inputValue);
             setDataContainer(specificQuery);
           }}
+          inputPlaceholder="🕵️ Search your entries"
         >
-          <PasswordInput
-            type="text"
-            placeholder="🕵️ Search your entries"
-            onChange={(event) => {
-              event.preventDefault();
-              setInputValue(event.target.value);
-            }}
-          />
           <Button onClick={async () => {}}>Click me</Button>
-        </PasswordSearchForm>
+        </Form>
         <Button
           onClick={async () => {
             setAllQuery();

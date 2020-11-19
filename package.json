@@ -5,9 +5,12 @@
   "main": "passwordManager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run storybook\"",
+    "client": "cd client && npm start",
+    "server": "nodemon server.js",
     "storybook": "cd client && npm run storybook",
-    "start": "concurrently \"nodemon server.js\" \"cd client && npm start\" \"cd client && npm run storybook\" ",
+    "build": "cd client && npm run build && npm run build-storybook",
+    "start": "node server.js",
     "postinstall": "cd client && npm install"
   },
   "repository": {

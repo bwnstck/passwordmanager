@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const { request } = require("express");
 const express = require("express");
+const path = require("path");
+
 const {
   findInDataBase,
   replaceOne,
@@ -9,6 +11,7 @@ const {
   addEntryToDB,
   deleteOne,
 } = require("./utils/database");
+
 const { loadingAnimation } = require("./utils/load");
 
 const app = express();
@@ -79,9 +82,17 @@ app.post("/api/passwords", async (request, response) => {
   }
 });
 
-// app.put("/api/passwords/", function (req, res) {
-//   res.send("Got a PUT request at /user");
-// });
+app.use(express.static(path.join(__dirname, "client/build")));
+
+app.use(
+  "/storybook",
+  express.static(path.join(__dirname, "client/storybook-static"))
+);
+
+app.get("*", (request, response) => {
+  response.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
+
 
 async function run() {
   await loadingAnimation();
