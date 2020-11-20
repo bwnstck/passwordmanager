@@ -17,7 +17,7 @@ const { loadingAnimation } = require("./utils/load");
 const app = express();
 app.use(express.json());
 
-const port = process.env.port || 3002;
+const port = process.env.PORT || 3002;
 
 //! List all entries
 app.get("/api/passwords", async (request, response) => {
